@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FogNet Sentinel | SIH26007</title>
+<style>
+:root{
+  --bg:#070a0f; --panel:#0d131c; --panel2:#111a25; --line:#243244;
+  --text:#edf4fb; --muted:#91a2b6; --cyan:#35d7ff; --green:#45e6a1;
+  --amber:#ffc857; --red:#ff6577; --purple:#9a7cff;
+  --shadow:0 20px 60px rgba(0,0,0,.35); --r:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:
+radial-gradient(circle at 80% -10%,rgba(53,215,255,.12),transparent 32%),
+radial-gradient(circle at 5% 20%,rgba(154,124,255,.10),transparent 28%),
+var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.55}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+.container{width:min(1180px,92vw);margin:auto}
+nav{position:sticky;top:0;z-index:20;background:rgba(7,10,15,.78);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
+.navin{height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-weight:900;letter-spacing:.4px}.logo span{color:var(--cyan)}
+.navlinks{display:flex;gap:8px;flex-wrap:wrap}
+.navlinks a{font-size:13px;color:var(--muted);padding:8px 10px;border-radius:10px}
+.navlinks a:hover{background:#121b27;color:#fff}
+.hero{padding:92px 0 70px;position:relative;overflow:hidden}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #294258;background:#0d1822;color:#9bdff1;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.5px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 14px var(--green)}
+h1{font-size:clamp(42px,7vw,82px);line-height:.98;margin:22px 0 18px;letter-spacing:-3px}
+.grad{background:linear-gradient(100deg,#fff 25%,#7eeaff 62%,#a993ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:760px;color:#b2c0cf;font-size:18px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.btn{border:1px solid #2b4054;background:#111b27;color:#fff;padding:11px 16px;border-radius:12px;cursor:pointer;font-weight:800}
+.btn.primary{background:linear-gradient(135deg,#1eb9dd,#5b76ff);border:0}
+.btn:hover{transform:translateY(-1px)}
+.herogrid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+.hero-art{min-height:390px;border:1px solid #1e2d3e;background:linear-gradient(145deg,#0b121b,#0d1620);border-radius:28px;box-shadow:var(--shadow);position:relative;overflow:hidden;padding:18px}
+.gridbg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:34px 34px}
+.maproad{position:absolute;left:8%;right:8%;top:45%;height:75px;border-radius:50%;border:2px dashed #51677c;transform:rotate(-9deg);box-shadow:0 0 45px rgba(53,215,255,.06)}
+.node{position:absolute;width:16px;height:16px;border-radius:50%;border:3px solid #071018;background:var(--cyan);box-shadow:0 0 20px rgba(53,215,255,.7)}
+.node.a{left:22%;top:49%}.node.b{left:68%;top:39%}.node.c{left:47%;top:66%;background:var(--amber);box-shadow:0 0 20px rgba(255,200,87,.6)}
+.truck{position:absolute;padding:8px 11px;border-radius:10px;background:#152230;border:1px solid #2e4a61;font-size:11px;font-weight:900;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.truck.t1{left:18%;top:41%;animation:float 4s ease-in-out infinite}.truck.t2{left:65%;top:51%;animation:float 4s 1s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-7px)}}
+.tag{position:absolute;font-size:10px;color:#9eb0c2;background:#0a1119;border:1px solid #233547;padding:5px 7px;border-radius:7px}
+.tag.s1{left:10%;top:12%}.tag.s2{right:10%;top:17%}.tag.s3{left:36%;bottom:10%}
+section{padding:76px 0}
+.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:30px}
+.kicker{color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:1.3px;text-transform:uppercase}
+h2{font-size:clamp(28px,4vw,44px);margin:7px 0 0;letter-spacing:-1.5px}
+.lead{color:var(--muted);max-width:720px}
+.cardgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:linear-gradient(160deg,rgba(17,26,37,.96),rgba(11,16,23,.96));border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:0 10px 35px rgba(0,0,0,.16)}
+.card h3{margin:5px 0 8px;font-size:19px}.card p{color:var(--muted);margin:0}
+.icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#102333;border:1px solid #23425a;color:var(--cyan);font-weight:900}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;margin-top:12px}
+.b-cyan{background:#0b2835;color:#72e5ff}.b-green{background:#0b2c22;color:#72edb9}.b-amber{background:#2d2510;color:#ffd979}.b-red{background:#30151c;color:#ff8896}.b-purple{background:#211a35;color:#b9a5ff}
+.flow{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;align-items:stretch}
+.flow .step{padding:15px 10px;border:1px solid #27384a;background:#0d151f;border-radius:14px;text-align:center;position:relative}
+.flow .step:not(:last-child)::after{content:"→";position:absolute;right:-11px;top:50%;transform:translateY(-50%);color:#4c6a83;font-weight:900;z-index:2}
+.step b{display:block;font-size:13px}.step span{font-size:11px;color:var(--muted)}
+.demo{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+.controlbox{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 18px}
+.range{flex:1;min-width:190px}.range label{display:flex;justify-content:space-between;font-size:12px;color:#aebccc}.range input{width:100%;accent-color:var(--cyan)}
+.meter{height:14px;background:#0a1017;border:1px solid #253342;border-radius:999px;overflow:hidden}.meter i{display:block;height:100%;width:60%;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));transition:.35s}
+.metricrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}.metric{padding:14px;background:#0b121a;border:1px solid #1e2c3a;border-radius:13px}.metric small{display:block;color:var(--muted);font-size:10px}.metric strong{font-size:22px}
+.status{font-size:18px;font-weight:900}.status.safe{color:var(--green)}.status.warn{color:var(--amber)}.status.danger{color:var(--red)}
+.map{min-height:360px;border:1px solid #233445;border-radius:18px;background:#091018;position:relative;overflow:hidden}
+.map .road{position:absolute;left:5%;right:5%;top:43%;height:84px;border:2px solid #3b5266;border-radius:50%;transform:rotate(-11deg);background:rgba(50,72,91,.09)}
+.map .truck{transition:left .5s,top .5s}
+.map .fog{position:absolute;inset:0;background:radial-gradient(circle at 55% 47%,rgba(220,235,245,.12),transparent 45%);pointer-events:none}
+.legend{position:absolute;bottom:12px;left:12px;display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:#9fb0c0}
+.legend span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:currentColor}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab{padding:9px 12px;border:1px solid #26384b;background:#0c141e;border-radius:10px;color:#9fb0c0;cursor:pointer;font-size:12px;font-weight:800}.tab.active{color:#fff;border-color:#3f7192;background:#102333}
+.tabcontent{display:none}.tabcontent.active{display:block}
+.formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:clamp(20px,3vw,34px);padding:22px;border-radius:16px;background:#080e15;border:1px solid #273747;text-align:center;color:#d9f8ff;margin:14px 0}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.timeline{display:grid;gap:10px}.event{display:grid;grid-template-columns:105px 1fr;gap:16px;padding:15px;border-left:2px solid #29465c;background:#0b121a;border-radius:0 13px 13px 0}.event time{color:#6edcf5;font-weight:900;font-size:12px}
+.togglelist{display:grid;gap:9px}.toggle{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:#0a1119;border:1px solid #213140;border-radius:12px}.switch{width:42px;height:23px;border-radius:999px;background:#25313d;position:relative;cursor:pointer}.switch i{width:17px;height:17px;border-radius:50%;background:#8795a4;position:absolute;top:3px;left:3px;transition:.2s}.switch.on{background:#1c8c6b}.switch.on i{left:22px;background:white}
+.sourcegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.source{border:1px solid #253648;background:#0c141d;border-radius:15px;padding:18px}.source .file{color:#6e8aa0;font-size:11px;margin-top:6px}.source ul{color:#a7b6c5;font-size:13px;margin:10px 0 0;padding-left:18px}.source li{margin:5px 0}
+.flaw{border-color:#55333a;background:linear-gradient(160deg,#171015,#0d1218)}.flaw strong{color:#ff9aa5}.severity{font-size:10px;font-weight:900;color:#ff9aa5;letter-spacing:.8px}
+footer{border-top:1px solid #1d2b38;padding:40px 0 60px;color:#718294;font-size:12px}
+.note{padding:14px 16px;border-left:3px solid var(--amber);background:#15130c;color:#c5b995;border-radius:0 12px 12px 0}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}.modal.show{display:flex}.modalbox{max-width:720px;max-height:85vh;overflow:auto;background:#0d151f;border:1px solid #31465b;border-radius:20px;padding:26px;box-shadow:var(--shadow)}.close{float:right;background:#172330;border:0;color:#fff;border-radius:9px;padding:7px 10px;cursor:pointer}
+@media(max-width:900px){.herogrid,.demo,.split{grid-template-columns:1fr}.cardgrid{grid-template-columns:1fr 1fr}.flow{grid-template-columns:repeat(2,1fr)}.flow .step:not(:last-child)::after{display:none}.sourcegrid{grid-template-columns:1fr}}
+@media(max-width:600px){.navlinks{display:none}.hero{padding-top:55px}.cardgrid,.metricrow{grid-template-columns:1fr}.event{grid-template-columns:1fr}.hero-art{min-height:300px}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="container navin">
+    <div class="logo">FOGNET <span>SENTINEL</span></div>
+    <div class="navlinks">
+      <a href="#how">How it works</a><a href="#demo">Live demo</a><a href="#architecture">Architecture</a>
+      <a href="#failure">Failure modes</a><a href="#flaws">Flaws</a><a href="#sources">Sources</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container herogrid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> SIH26007 · Interactive Solution</div>
+      <h1><span class="grad">FogNet Sentinel</span><br>Verified Safe-Corridor Cooperative Safety Network</h1>
+      <p>
+        A mine-vehicle safety architecture for fog and low visibility. Instead of asking only
+        “Can the driver see?”, the system continuously asks:
+        <b>“How much road ahead is actually verified safe, and is that enough to stop safely?”</b>
+      </p>
+      <div class="cta">
+        <a class="btn primary" href="#demo">Run the safety simulation</a>
+        <a class="btn" href="#architecture">Explore architecture</a>
+        <button class="btn" onclick="openModal('pitch')">30-second explanation</button>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="gridbg"></div><div class="maproad"></div>
+      <div class="node a"></div><div class="node b"></div><div class="node c"></div>
+      <div class="truck t1">TRUCK A · RADAR</div><div class="truck t2">TRUCK B · V2V</div>
+      <div class="tag s1">ROAD GUARDIAN · MOR</div><div class="tag s2">VIRTUAL BLOCK</div><div class="tag s3">VERIFIED CORRIDOR</div>
+    </div>
+  </div>
+</header>
+
+<section id="how">
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">The core idea</div><h2>From fog detection to verified movement</h2></div>
+  <p class="lead">The architecture combines the strongest compatible ideas from the six uploaded solution documents, while keeping immediate safety decisions deterministic and local.</p></div>
+  <div class="cardgrid">
+    <div class="card"><div class="icon">01</div><h3>Sense</h3><p>Radar-first local obstacle ranging, with GNSS/IMU, speed/load/grade context and optional camera/thermal evidence.</p><span class="badge b-cyan">LOCAL FIRST</span></div>
+    <div class="card"><div class="icon">02</div><h3>Prove the corridor</h3><p>Track hazards and estimate how many metres of road ahead are sufficiently verified for safe movement.</p><span class="badge b-green">VERIFIED SAFE CORRIDOR</span></div>
+    <div class="card"><div class="icon">03</div><h3>Calculate stopping need</h3><p>Compare verified clear distance with a conservative vehicle-specific stopping requirement.</p><span class="badge b-amber">BRAKETWIN + PHYSICS</span></div>
+    <div class="card"><div class="icon">04</div><h3>Cooperate</h3><p>Vehicles and roadside nodes share compact hazard evidence, blind-curve occupancy and visibility state.</p><span class="badge b-purple">V2V / V2I</span></div>
+    <div class="card"><div class="icon">05</div><h3>Coordinate</h3><p>Virtual Blocks and a Movement Token manage blind sections so two vehicles do not blindly enter the same conflict zone.</p><span class="badge b-cyan">FAIL-CLOSED</span></div>
+    <div class="card"><div class="icon">06</div><h3>Guide + log</h3><p>Driver gets one clear action. The control room receives a lightweight 2D operational picture and event history.</p><span class="badge b-green">EXPLAINABLE</span></div>
+  </div>
+</div>
+</section>
+
+<section id="architecture">
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">System architecture</div><h2>One safety loop, many supporting layers</h2></div></div>
+  <div class="flow">
+    <div class="step"><b>SENSE</b><span>Radar · IMU · GNSS · camera</span></div>
+    <div class="step"><b>PROVE</b><span>Tracks · health · uncertainty</span></div>
+    <div class="step"><b>SHARE</b><span>Hazard Capsule · MOR · V2V</span></div>
+    <div class="step"><b>CALCULATE</b><span>BrakeTwin · stopping envelope</span></div>
+    <div class="step"><b>DECIDE</b><span>Safety margin · state machine</span></div>
+    <div class="step"><b>GUIDE</b><span>Speed · distance · warning</span></div>
+    <div class="step"><b>LOG</b><span>Events · replay · dashboard</span></div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <div class="split">
+      <div>
+        <h3>Safety ownership</h3>
+        <p style="color:var(--muted)">Local radar and the deterministic safety engine can raise risk. Peer data can add a conflict but cannot clear a valid local radar hazard. Roadside and AI layers can make the system more cautious, not silently less cautious.</p>
+      </div>
+      <div>
+        <h3>Non-negotiable invariant</h3>
+        <div class="note">Loss of V2V, camera, dashboard, fog node or internet must not suppress a valid local radar alert.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="demo">
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">Interactive engineering demo</div><h2>Watch the safety margin change</h2></div><p class="lead">Move the controls. This is a concept simulation, not a certified vehicle-control model.</p></div>
+  <div class="demo">
+    <div class="card">
+      <h3>Vehicle state</h3>
+      <div class="controlbox">
+        <div class="range"><label>Speed <b id="speedV">18 km/h</b></label><input id="speed" type="range" min="5" max="50" value="18"></div>
+        <div class="range"><label>Verified clear distance <b id="clearV">28 m</b></label><input id="clear" type="range" min="2" max="60" value="28"></div>
+      </div>
+      <div class="controlbox">
+        <div class="range"><label>Reaction time <b id="reactV">1.5 s</b></label><input id="react" type="range" min="0.5" max="3" step=".1" value="1.5"></div>
+        <div class="range"><label>Safe deceleration <b id="decelV">4.0 m/s²</b></label><input id="decel" type="range" min="1.5" max="7" step=".1" value="4"></div>
+      </div>
+      <div class="range"><label>Safety buffer <b id="bufferV">3 m</b></label><input id="buffer" type="range" min="0" max="10" value="3"></div>
+      <div style="margin-top:18px"><div style="display:flex;justify-content:space-between;font-size:12px;color:#9aaabd"><span>Safety margin</span><b id="marginLabel">--</b></div><div class="meter"><i id="meter"></i></div></div>
+      <div class="metricrow">
+        <div class="metric"><small>Required distance</small><strong id="req">--</strong></div>
+        <div class="metric"><small>Verified distance</small><strong id="clr">--</strong></div>
+        <div class="metric"><small>Decision</small><strong id="decision" class="status">--</strong></div>
+      </div>
+      <div class="note" style="margin-top:16px">Rule: <b>M = D_verified − D_required</b>. Positive margin means the verified corridor currently exceeds the modeled stopping requirement. Negative margin means the recommended response should become more conservative.</div>
+    </div>
+    <div class="map" id="mineMap">
+      <div class="road"></div><div class="fog"></div>
+      <div class="truck" id="truckA" style="left:18%;top:39%">A · 18 km/h</div>
+      <div class="truck" id="truckB" style="left:64%;top:52%">B · V2V</div>
+      <div class="tag" style="left:10%;top:17%">MOR NODE</div>
+      <div class="tag" style="right:8%;top:18%">BLIND CURVE</div>
+      <div class="tag" style="left:42%;bottom:13%">VIRTUAL BLOCK</div>
+      <div class="legend"><span style="color:#35d7ff">Truck</span><span style="color:#ffc857">Road Guardian</span><span style="color:#9a7cff">Virtual Block</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">Core calculation</div><h2>The number that drives the warning</h2></div></div>
+  <div class="formula">D_required = v × t_reaction + v² / (2 × a_safe) + D_buffer</div>
+  <div class="split">
+    <div class="card"><h3>What goes into it?</h3><p><b>v</b> current vehicle speed · <b>t_reaction</b> assumed response time · <b>a_safe</b> conservative validated deceleration · <b>D_buffer</b> extra margin.</p></div>
+    <div class="card"><h3>What the system outputs</h3><p><b>M = D_verified − D_required.</b> As the margin falls, the system can move from normal → advisory → restricted → emergency, subject to site rules.</p></div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">How the pieces work together</div><h2>Interactive feature explorer</h2></div></div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('radar',this)">Radar-first</button>
+    <button class="tab" onclick="showTab('v2v',this)">Hazard Capsule</button>
+    <button class="tab" onclick="showTab('curve',this)">Blind curves</button>
+    <button class="tab" onclick="showTab('fog',this)">Road Guardian</button>
+    <button class="tab" onclick="showTab('ai',this)">AI role</button>
+    <button class="tab" onclick="showTab('hmi',this)">Driver HMI</button>
+  </div>
+  <div id="radar" class="tabcontent active card"><h3>Radar-first local loop</h3><p>Radar is the primary local ranging layer. Track objects, estimate clear distance and feed the stopping envelope. Camera/thermal evidence may confirm or classify, but cannot veto a valid radar conflict simply because it sees nothing.</p></div>
+  <div id="v2v" class="tabcontent card"><h3>Hazard Capsule</h3><p>A compact cooperative message carries the hazard type, relative distance/speed, route or segment context, uncertainty, timestamp/age, expiry and evidence. It is awareness data, not a brake command. Stale or irrelevant messages expire.</p></div>
+  <div id="curve" class="tabcontent card"><h3>Virtual Block + Movement Token</h3><p>A blind segment moves through states such as CLEAR → RESERVED → OCCUPIED → UNCERTAIN → CLOSED. A Movement Token coordinates who enters and who waits using position, speed, load, grade, road width and stopping margin. Uncertainty fails closed.</p></div>
+  <div id="fog" class="tabcontent card"><h3>Road Guardian / MOR node</h3><p>Strategic roadside nodes measure current visibility and environmental context. The source documents caution that local visibility measurements need calibration and may not represent the entire road. Forecasting should only be enabled after site-labelled validation.</p></div>
+  <div id="ai" class="tabcontent card"><h3>AI has a supporting role</h3><p>AI can assist object classification, fog trend analysis, road-segment risk scoring, anomaly detection and near-miss analytics. The immediate safety state remains deterministic and replayable rather than being owned by an opaque model.</p></div>
+  <div id="hmi" class="tabcontent card"><h3>One decision, not a dashboard explosion</h3><p>Example: <b>⚠ SLOW DOWN · Safe Speed 8 km/h · Clear 18 m · Required 25 m · Truck Ahead 18 m</b>. The driver should understand the action and the reason quickly.</p></div>
+</div>
+</section>
+
+<section id="failure">
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">Failure behavior</div><h2>Break the network. Safety should remain.</h2></div><p class="lead">Use the switches to simulate degraded conditions.</p></div>
+  <div class="demo">
+    <div class="card">
+      <div class="togglelist">
+        <div class="toggle"><span>V2V / cooperative link</span><span class="switch on" onclick="toggleSwitch(this,'v2v')"><i></i></span></div>
+        <div class="toggle"><span>Camera / visual classifier</span><span class="switch on" onclick="toggleSwitch(this,'camera')"><i></i></span></div>
+        <div class="toggle"><span>Road Guardian / MOR node</span><span class="switch on" onclick="toggleSwitch(this,'mor')"><i></i></span></div>
+        <div class="toggle"><span>Internet / cloud</span><span class="switch on" onclick="toggleSwitch(this,'cloud')"><i></i></span></div>
+        <div class="toggle"><span>GNSS confidence</span><span class="switch on" onclick="toggleSwitch(this,'gnss')"><i></i></span></div>
+      </div>
+    </div>
+    <div class="card" id="failureOut">
+      <h3>Current degraded-mode response</h3>
+      <div class="status safe" id="failStatus">LOCAL SAFETY ACTIVE</div>
+      <p id="failText" style="color:var(--muted);margin-top:12px">All supporting layers are available. Local radar remains the primary immediate safety path.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">Prototype</div><h2>What we actually build for SIH</h2></div></div>
+  <div class="cardgrid">
+    <div class="card"><h3>Vehicle Safety Unit</h3><p>ESP32/STM32-class controller, suitable radar dev sensor, IMU, RF link, OLED/display, buzzer/vibration and battery on a model vehicle.</p></div>
+    <div class="card"><h3>Road Guardian</h3><p>ESP32-class node with visibility/light-attenuation sensing, humidity/temperature, wireless communication, LED and power source.</p></div>
+    <div class="card"><h3>Blind-curve gate</h3><p>Two wireless token nodes representing a hidden road segment. Demonstrate reservation, occupancy and fail-closed uncertainty.</p></div>
+    <div class="card"><h3>Dashboard</h3><p>2D road map, truck status, fog zones, hazards, safety margin, communication health and event history.</p></div>
+    <div class="card"><h3>Replay / evidence</h3><p>Store timestamp, location, speed, hazard, safety margin, sensor state and communication state so events can be inspected later.</p></div>
+    <div class="card"><h3>Demo sequence</h3><p>Normal → fog → reduced visibility → obstacle → V2V around blind curve → communication loss → local safety continues.</p></div>
+  </div>
+</div>
+</section>
+
+<section id="flaws">
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">Engineering honesty</div><h2>Known flaws, limits and open risks</h2></div><p class="lead">These are deliberately visible. A strong SIH solution should explain what is not proven yet.</p></div>
+  <div class="cardgrid">
+    <div class="card flaw"><div class="severity">LIMIT 01 · HARDWARE</div><h3>Prototype sensors are not mine-rated</h3><p>Student development hardware does not prove vibration, dust, rain, temperature, EMC, range or long-term reliability. Production needs ruggedized and appropriately qualified hardware.</p></div>
+    <div class="card flaw"><div class="severity">LIMIT 02 · BRAKING</div><h3>BrakeTwin needs real vehicle evidence</h3><p>Safe deceleration is not a universal constant. Vehicle type, payload, grade and surface matter. Production values require measured and validated braking data.</p></div>
+    <div class="card flaw"><div class="severity">LIMIT 03 · RADAR</div><h3>Radar can still fail</h3><p>Blocked, misaligned or false tracks are possible. The architecture therefore needs self-test, track consistency checks, conservative fallback and service rules.</p></div>
+    <div class="card flaw"><div class="severity">LIMIT 04 · FOG</div><h3>Fog prediction is not guaranteed</h3><p>Current visibility can be measured. A useful nowcast requires site-labelled data and calibration. One roadside node cannot represent every part of a mine road.</p></div>
+    <div class="card flaw"><div class="severity">LIMIT 05 · LOCALIZATION</div><h3>GNSS can be wrong or ambiguous</h3><p>A wrong route branch can corrupt road context. The safety design should shorten the trusted corridor or impose a conservative cap rather than trust uncertain localization.</p></div>
+    <div class="card flaw"><div class="severity">LIMIT 06 · COMMUNICATION</div><h3>V2V data can be stale</h3><p>Packets can arrive late, disappear or describe an old hazard. Sequence, timestamp, TTL and uncertainty handling are required. Local radar remains authoritative for local conflicts.</p></div>
+    <div class="card flaw"><div class="severity">LIMIT 07 · HUMAN FACTORS</div><h3>Too many alerts can become noise</h3><p>HMI needs field testing for alarm timing, wording, sound, vibration and operator acceptance. A technically correct warning can still fail if drivers cannot act on it quickly.</p></div>
+    <div class="card flaw"><div class="severity">LIMIT 08 · SAFETY CASE</div><h3>This is not safety certification</h3><p>The uploaded NEXORA dossier explicitly frames the work as an engineering proposal, not safety certification. Production motion-control integration needs formal hazard analysis, validation and OEM/site approval.</p></div>
+    <div class="card flaw"><div class="severity">LIMIT 09 · SCOPE</div><h3>Prototype is advisory</h3><p>We are not claiming a fully autonomous dumper. Direct throttle, retarder or hydraulic braking is outside the SIH prototype boundary.</p></div>
+  </div>
+</div>
+</section>
+
+<section id="sources">
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">Source audit</div><h2>Where the solution came from</h2></div><p class="lead">Six uploaded solution documents were synthesized. The current architecture is a synthesis, not a claim that any one source proposed the entire final system.</p></div>
+  <div class="sourcegrid">
+    <div class="source"><h3>01 · FogNet Nexus</h3><div class="file">Chatgpt_FogNet_Nexus.pdf</div><ul><li>Fog trend and predictive road risk</li><li>Conflict prediction and Movement Token</li><li>Mine control room + digital twin</li><li>Fail-safe mode and prototype-first framing</li></ul></div>
+    <div class="source"><h3>02 · FogNet Alive</h3><div class="file">Claude_FogNet_Alive.pdf</div><ul><li>Vehicles can become temporary sensing/verification nodes</li><li>Fleet can verify roadside predictions</li><li>Self-correcting cooperative sensing concept</li></ul></div>
+    <div class="source"><h3>03 · FogNet 4.1</h3><div class="file">AboliFogNet_4.1.pdf</div><ul><li>Dynamic Safety Bubble / stopping-distance logic</li><li>Road Guardians and worker tags</li><li>Local safety during network failure</li><li>Prototype hardware and industrial roadmap</li></ul></div>
+    <div class="source"><h3>04 · FogNet Swarm</h3><div class="file">GLM_Fogswam.docx</div><ul><li>Distributed cooperative perception</li><li>Compact spatial/hazard sharing</li><li>Kinetic right-of-way / fleet-level coordination</li></ul></div>
+    <div class="source"><h3>05 · FOG-SHIELD X</h3><div class="file">PrathameshFOG_SHIELD_X.pdf</div><ul><li>Cooperative predictive hazard propagation</li><li>Sensor-fusion evidence and trust concepts</li><li>Risk mapping and explainable alerts</li></ul></div>
+    <div class="source"><h3>06 · NEXORA FogNet SafeEnvelope</h3><div class="file">Snehal_NEXORA_FogNe.pdf</div><ul><li>Safe-to-Proceed Corridor</li><li>Radar-first primary safety loop</li><li>BrakeTwin and stopping envelope</li><li>Virtual Block and proof/freshness handling</li><li>Measured visibility first + explicit failure modes</li></ul></div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3>Source-to-feature map</h3>
+    <div class="split">
+      <div>
+        <p><b>Safe Corridor:</b> NEXORA FogNet SafeEnvelope</p>
+        <p><b>Dynamic Safety Bubble:</b> FogNet 4.1</p>
+        <p><b>Radar-first sensing:</b> NEXORA FogNet SafeEnvelope</p>
+        <p><b>Radar + camera:</b> FOG-SHIELD X + FogNet Swarm</p>
+        <p><b>V2V cooperative perception:</b> FogNet Swarm</p>
+        <p><b>Hazard Capsule:</b> FogNet Swarm + NEXORA</p>
+      </div>
+      <div>
+        <p><b>Movement Token:</b> FogNet Nexus</p>
+        <p><b>Road Guardian:</b> FogNet 4.1</p>
+        <p><b>Fog trend:</b> FogNet Nexus + NEXORA</p>
+        <p><b>BrakeTwin:</b> NEXORA FogNet SafeEnvelope</p>
+        <p><b>Failure/degraded modes:</b> FogNet 4.1 + NEXORA</p>
+        <p><b>Verification/self-correction:</b> FogNet Alive</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="sectionhead"><div><div class="kicker">Team explanation</div><h2>Explain it in one minute</h2></div></div>
+  <div class="timeline">
+    <div class="event"><time>0–10 sec</time><div><b>Problem:</b> Fog hides trucks, obstacles, workers and blind curves. A camera-only reaction can happen too late.</div></div>
+    <div class="event"><time>10–25 sec</time><div><b>Our answer:</b> Each vehicle builds a verified safe corridor using local radar and supporting evidence. It compares that corridor with the distance needed to stop.</div></div>
+    <div class="event"><time>25–40 sec</time><div><b>Cooperation:</b> Other vehicles and roadside nodes share compact hazard/visibility information, so a truck can receive useful awareness before it sees the hazard.</div></div>
+    <div class="event"><time>40–50 sec</time><div><b>Blind curves:</b> A Virtual Block and Movement Token prevent conflicting entries. Uncertainty fails closed.</div></div>
+    <div class="event"><time>50–60 sec</time><div><b>Key safety promise:</b> Network loss does not equal safety loss. Local radar and the deterministic safety loop remain active.</div></div>
+  </div>
+</div>
+</section>
+
+<footer>
+<div class="container">
+  <b>FogNet Sentinel · SIH26007</b><br>
+  Interactive engineering concept synthesized from the six user-provided solution documents. This page describes a prototype/advisory architecture, not a certified mine-safety or autonomous-driving system.
+</div>
+</footer>
+
+<div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">Close</button><div id="modalBody"></div></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+function calc(){
+  const v=+$('speed').value/3.6, t=+$('react').value, a=+$('decel').value, b=+$('buffer').value, d=+$('clear').value;
+  const req=v*t+(v*v)/(2*a)+b, m=d-req;
+  $('speedV').textContent=$('speed').value+' km/h';
+  $('clearV').textContent=$('clear').value+' m';
+  $('reactV').textContent=t.toFixed(1)+' s';
+  $('decelV').textContent=a.toFixed(1)+' m/s²';
+  $('bufferV').textContent=b+' m';
+  $('req').textContent=req.toFixed(1)+' m'; $('clr').textContent=d.toFixed(1)+' m';
+  $('marginLabel').textContent=(m>=0?'+':'')+m.toFixed(1)+' m';
+  const meter=Math.max(3,Math.min(97,50+m*2.2)); $('meter').style.width=meter+'%';
+  const dec=$('decision'); dec.className='status';
+  if(m>=8){dec.textContent='SAFE';dec.classList.add('safe')}
+  else if(m>=0){dec.textContent='ADVISORY';dec.classList.add('warn')}
+  else {dec.textContent='SLOW DOWN';dec.classList.add('danger')}
+  $('truckA').textContent='A · '+$('speed').value+' km/h';
+}
+['speed','clear','react','decel','buffer'].forEach(id=>$(id).addEventListener('input',calc)); calc();
+
+function showTab(id,btn){
+  document.querySelectorAll('.tabcontent').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  $(id).classList.add('active'); btn.classList.add('active');
+}
+const states={v2v:true,camera:true,mor:true,cloud:true,gnss:true};
+function toggleSwitch(el,key){
+  states[key]=!states[key]; el.classList.toggle('on',states[key]); updateFailure();
+}
+function updateFailure(){
+  let notes=[];
+  if(!states.v2v) notes.push('V2V unavailable: cooperative awareness is lost, but local radar safety remains.');
+  if(!states.camera) notes.push('Camera unavailable: radar remains the primary local ranging layer.');
+  if(!states.mor) notes.push('Road Guardian unavailable: onboard safety continues; visibility evidence becomes less rich.');
+  if(!states.cloud) notes.push('Cloud unavailable: local safety is unaffected; logging/remote analytics may be reduced.');
+  if(!states.gnss) notes.push('GNSS uncertain: route context is shortened/conservative rather than trusted blindly.');
+  $('failText').textContent=notes.length?notes.join(' '):'All supporting layers are available. Local radar remains the primary immediate safety path.';
+  $('failStatus').textContent=notes.length?'DEGRADED · LOCAL SAFETY ACTIVE':'LOCAL SAFETY ACTIVE';
+  $('failStatus').className='status '+(notes.length?'warn':'safe');
+}
+function openModal(type){
+  const bodies={
+    pitch:`<div class="kicker">30-second pitch</div><h2>What is FogNet Sentinel?</h2><p>FogNet Sentinel turns a haul road into a cooperative safety environment. Each truck locally senses hazards, proves a safe corridor and compares that corridor with its own stopping requirement. Vehicles and roadside nodes add information around blind curves and fog pockets. If the verified corridor becomes too short, the driver gets a clear slowdown/warning instruction.</p><p><b>The key rule:</b> supporting systems can add caution, but they cannot erase a valid local radar hazard. Network loss does not remove local safety.</p>`
+  };
+  $('modalBody').innerHTML=bodies[type]||'';
+  $('modal').classList.add('show');
+}
+function closeModal(){$('modal').classList.remove('show')}
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+</script>
+</body>
+</html>
